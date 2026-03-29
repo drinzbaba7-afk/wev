@@ -3,55 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RECON | {fatmirhaklaj}</title>
+    <title>F4TM1R HAKLAJ</title>
     <style>
-        :root {
-            --bg: #030303; --panel: #0d0d0d; --accent: #ffcc00;
-            --text: #fff; --dim: #555; --alert: #ff3c3c;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        body { 
-            background: var(--bg); color: var(--text); 
-            font-family: 'Consolas', monospace; 
-            display: flex; justify-content: center; align-items: center; 
-            height: 100vh; margin: 0;
-            background: radial-gradient(circle, #111 0%, #000 100%);
+
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+        }
+
         .profile-card {
-            background: var(--panel); border: 1px solid #222;
-            padding: 50px; border-radius: 15px; text-align: center;
-            width: 420px; box-shadow: 0 0 50px rgba(0,0,0,1);
+            background: #111111;
+            border: 1px solid #222222;
+            border-radius: 24px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         }
-        .id { font-size: 2.5rem; font-weight: bold; margin-bottom: 10px; }
-        .id::before, .id::after { content: " "; color: var(--dim); }
-        .bio { color: var(--dim); font-size: 1rem; margin-bottom: 30px; }
-        .loc { 
-            display: inline-block; padding: 8px 20px; 
-            border: 1px solid #333; border-radius: 20px; 
-            font-size: 0.8rem; margin-bottom: 30px; 
+
+        .avatar-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
         }
-        .status-box {
-            background: rgba(255, 60, 60, 0.1);
-            border: 1px solid var(--alert);
-            padding: 20px; color: var(--alert);
-            font-weight: bold; font-size: 0.8rem;
-            text-transform: uppercase;
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #1a1a1a;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
-        .status-box span { color: #fff; display: block; margin-top: 5px; font-weight: normal; text-transform: none; }
-        .node-info { position: absolute; top: 20px; right: 20px; font-size: 0.7rem; color: var(--accent); }
+
+        .status-dot {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            background-color: #23a55a; /* Discord Online Green */
+            border: 4px solid #111111;
+            border-radius: 50%;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .username {
+            color: #888888;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .bio {
+            color: #cccccc;
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+
+        .location {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            color: #888888;
+            font-size: 0.85rem;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background-color: #ffffff;
+            color: #000000;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #eeeeee;
+            transform: translateY(-2px);
+        }
+
+        .social-footer {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            opacity: 0.5;
+        }
+
+        .social-footer svg {
+            width: 24px;
+            height: 24px;
+            fill: #ffffff;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-    <div class="node-info">AUTHORIZED: ALPHA | NODE: 93.103.182.83</div>
-    
-    <div class="profile-card">
-        <div class="id">{fatmirhaklaj}</div>
-        <div class="bio">haters suck my dick</div>
-        <div class="loc">📍 Kosovo</div>
-        
-        <div class="status-box">
-            ⚠️ USER_NOT_FOUND_ON_ZETA
-            <span>SYNC: Trace initialized. Target data isolated to local terminal.</span>
+
+    <div class="container">
+        <div class="profile-card">
+            <div class="avatar-container">
+                <img src="https://cdn.discordapp.com/avatars/1174063538529120286/45b3c7eb7b791f4f34466415e6652085.webp?size=1024" alt="F4TM1R HAKLAJ" class="avatar">
+                <div class="status-dot"></div>
+            </div>
+
+            <h1>F4TM1R HAKLAJ</h1>
+            <span class="username">@gjujts.me.do4um3nta</span>
+
+            <p class="bio">"haters suck my dick"</p>
+
+            <div class="location">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                Kosovo
+            </div>
+
+            <a href="https://guns.lol/fatmirhaklaj" target="_blank" class="btn">View Portfolio</a>
+            
+            <div class="social-footer">
+                <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.06.06 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+            </div>
         </div>
     </div>
+
 </body>
 </html>
