@@ -49,7 +49,7 @@
         }
 
         .console-box::before {
-            content: "[ COMMAND_DECK ]"; position: absolute;
+            content: "[ TACTICAL_DECK ]"; position: absolute;
             top: -10px; left: 20px; background: var(--bg);
             color: var(--sub-accent); padding: 0 10px; font-size: 0.8rem;
         }
@@ -84,27 +84,34 @@
             font-size: 0.9rem; box-shadow: inset 0 0 15px rgba(0, 255, 65, 0.1);
         }
 
-        #map-container, #port-scanner, #stability-graph {
+        .side-panel {
             background: var(--panel); border: 1px solid var(--border);
-            height: 220px; position: relative; overflow: hidden; margin-bottom: 15px;
+            height: 175px; position: relative; overflow: hidden; margin-bottom: 10px;
         }
 
         iframe { width: 100%; height: 100%; border: none; filter: grayscale(1) invert(1); }
-        .status-msg { color: #444; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.7rem;}
+        .status-msg { color: #444; position: absolute; top: 10px; left: 10px; font-size: 0.7rem; text-transform: uppercase;}
         
         canvas { width: 100%; height: 100%; }
+
+        .data-stream {
+            padding: 30px 10px 10px 10px;
+            font-size: 0.7rem;
+            color: var(--sub-accent);
+            line-height: 1.2;
+        }
     </style>
 </head>
 <body>
 
     <div class="top-nav">
-        <div>ZETA_PROTOCOL: <span style="color:var(--terminal-green)">[ DOMINANT ]</span></div>
+        <div>ZETA_STATUS: <span style="color:var(--terminal-green)">[ SYNCHRONIZED ]</span></div>
         <div>OPERATOR: <span style="color:var(--accent)">ALPHA</span></div>
         <div id="user-meta">LINK: INITIALIZING_</div>
     </div>
 
     <div class="wrapper">
-        <div class="brand-logo">DR1NZY_DRIVE v3.3</div>
+        <div class="brand-logo">DR1NZY_DRIVE v3.4</div>
         
         <div class="console-box">
             <div class="input-group">
@@ -113,22 +120,28 @@
             <div class="btn-row">
                 <button class="primary" onclick="executeFullScan()">Full Intel Scan</button>
                 <button onclick="scanPorts()">Port Scanner</button>
-                <button onclick="runSimulation('brute')">Brute Sim</button>
-                <button onclick="runSimulation('decrypt')">Quantum Decrypt</button>
+                <button onclick="dnsRecon()">DNS Recon</button>
+                <button onclick="httpHeaders()">HTTP Headers</button>
                 <button onclick="clearTerminal()">Clear</button>
                 <button class="alert" onclick="selfDestruct()">Self Destruct</button>
             </div>
         </div>
 
         <div class="display-grid">
-            <div id="terminal">> Standby for commands, Alpha...</div>
+            <div id="terminal">> Awaiting instructions, Alpha...</div>
             <div>
-                <div id="stability-graph">
-                    <div class="status-msg" id="ping-text">STABILITY: 100% | 14ms</div>
+                <div class="side-panel" id="stability-graph">
+                    <div class="status-msg" id="ping-text">GATEWAY_STABILITY: 100%</div>
                     <canvas id="graphCanvas"></canvas>
                 </div>
-                <div id="map-container"><div class="status-msg">[ MAP_OFFLINE ]</div></div>
-                <div id="port-scanner"><div class="status-msg">[ SCANNER_READY ]</div></div>
+                <div class="side-panel" id="map-container">
+                    <div class="status-msg">GEOLOCATION_MAP</div>
+                    <div style="margin-top:40%; text-align:center; color:#333;">[ OFFLINE ]</div>
+                </div>
+                <div class="side-panel" id="traffic-monitor">
+                    <div class="status-msg">LIVE_TRAFFIC_MONITOR</div>
+                    <div class="data-stream" id="stream-output">Initializing packet capture...</div>
+                </div>
             </div>
         </div>
     </div>
@@ -140,7 +153,7 @@
 
         const term = document.getElementById('terminal');
         const mapBox = document.getElementById('map-container');
-        const scannerBox = document.getElementById('port-scanner');
+        const streamOut = document.getElementById('stream-output');
 
         function addLog(text, color = 'var(--terminal-green)') {
             const span = document.createElement('span');
@@ -162,15 +175,14 @@
                 
                 let report = `\n> Intel Recovered for ${target}:\n`;
                 report += `------------------------------------\n`;
-                report += `CITY:      ${data.city || 'N/A'}\n`;
-                report += `COUNTRY:   ${data.country_name || 'N/A'}\n`;
-                report += `ISP:       ${data.org || 'N/A'}\n`;
-                report += `COORDS:    ${data.latitude}, ${data.longitude}\n`;
-                report += `ASN:       ${data.asn || 'N/A'}\n`;
+                report += `CITY/COUNTRY: ${data.city || 'N/A'}, ${data.country_name || 'N/A'}\n`;
+                report += `ISP/ORG:      ${data.org || 'N/A'}\n`;
+                report += `COORDS:       ${data.latitude}, ${data.longitude}\n`;
+                report += `ASN/VER:      ${data.asn || 'N/A'} / ${data.version || 'N/A'}\n`;
                 report += `------------------------------------`;
                 
                 addLog(report);
-                mapBox.innerHTML = `<iframe src="https://www.openstreetmap.org/export/embed.html?bbox=${data.longitude-0.1},${data.latitude-0.1},${data.longitude+0.1},${data.latitude+0.1}&layer=mapnik&marker=${data.latitude},${data.longitude}"></iframe>`;
+                mapBox.innerHTML = `<div class="status-msg">GEOLOCATION_MAP</div><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=${data.longitude-0.1},${data.latitude-0.1},${data.longitude+0.1},${data.latitude+0.1}&layer=mapnik&marker=${data.latitude},${data.longitude}"></iframe>`;
             } catch (e) {
                 addLog("> ERROR: Connection to datastream severed.", 'var(--alert-red)');
             }
@@ -179,46 +191,54 @@
         function scanPorts() {
             const target = document.getElementById('target').value || "127.0.0.1";
             addLog(`> Starting Port Audit on ${target}...`, 'var(--sub-accent)');
-            scannerBox.innerHTML = `<div style="padding:15px; color:var(--accent); font-size:0.75rem;">[ AUDITING ${target} ]<br><br>`;
-            
-            const ports = [21, 22, 23, 80, 443, 8080];
+            const ports = [21, 22, 53, 80, 443, 3306];
             ports.forEach((p, i) => {
                 setTimeout(() => {
-                    const open = Math.random() > 0.5;
-                    const status = open ? '<span style="color:var(--terminal-green)">OPEN</span>' : '<span style="color:#444">CLOSED</span>';
-                    scannerBox.firstChild.innerHTML += `PORT ${p}: ${status}<br>`;
-                    if(open) addLog(`> VULNERABILITY DETECTED: Port ${p} is OPEN.`);
-                    if(i === ports.length - 1) addLog(`> Port Audit for ${target} complete.`);
+                    const open = Math.random() > 0.6;
+                    addLog(`> Port ${p}: ${open ? 'OPEN' : 'CLOSED'}`, open ? 'var(--terminal-green)' : 'var(--border)');
                 }, i * 150);
             });
         }
 
-        function runSimulation(type) {
-            const target = document.getElementById('target').value || "ZETA_NODE_01";
-            addLog(`> Executing ${type.toUpperCase()} sequence against ${target}...`, 'var(--alert-red)');
-            let count = 0;
-            const interval = setInterval(() => {
-                addLog(`> [${type.toUpperCase()}] Attempting bypass... Key: ${Math.random().toString(36).substring(7)}`, 'var(--text-main)');
-                count++;
-                if(count > 8) {
-                    clearInterval(interval);
-                    addLog(`> [SUCCESS] ${type.toUpperCase()} finalized. Access granted to ${target}.`, 'var(--accent)');
-                }
-            }, 200);
+        function dnsRecon() {
+            const target = document.getElementById('target').value || "Zeta_Node";
+            addLog(`> Querying DNS records for ${target}...`, 'var(--sub-accent)');
+            setTimeout(() => {
+                addLog(`> [A] ${target} -> 192.168.${Math.floor(Math.random()*254)}.${Math.floor(Math.random()*254)}`);
+                addLog(`> [MX] mail.${target} -> priority 10`);
+                addLog(`> [TXT] "v=spf1 include:_spf.google.com ~all"`);
+                addLog(`> DNS Reconnaissance complete.`);
+            }, 800);
+        }
+
+        function httpHeaders() {
+            const target = document.getElementById('target').value || "Zeta_Node";
+            addLog(`> Fetching HTTP Headers for ${target}...`, 'var(--sub-accent)');
+            setTimeout(() => {
+                addLog(`> HTTP/1.1 200 OK\n> Server: nginx/Zeta-v4\n> Content-Type: text/html\n> X-Frame-Options: SAMEORIGIN\n> Connection: keep-alive`);
+            }, 600);
         }
 
         function clearTerminal() {
             term.innerHTML = "> Console Purged. Ready for command, Alpha.";
-            mapBox.innerHTML = '<div class="status-msg">[ MAP_OFFLINE ]</div>';
-            scannerBox.innerHTML = '<div class="status-msg">[ SCANNER_READY ]</div>';
+            mapBox.innerHTML = '<div class="status-msg">GEOLOCATION_MAP</div><div style="margin-top:40%; text-align:center; color:#333;">[ OFFLINE ]</div>';
         }
 
         function selfDestruct() {
             addLog("> !!! INITIATING SYSTEM WIPE !!!", 'var(--alert-red)');
             setTimeout(() => {
-                document.body.innerHTML = "<div style='color:red; font-family:monospace; text-align:center; margin-top:20%;'>[ SYSTEM TERMINATED ]<br>CONNECTION TO ZETA LOST.</div>";
+                document.body.innerHTML = "<div style='color:red; font-family:monospace; text-align:center; margin-top:20%; font-size:2rem;'>[ SYSTEM TERMINATED ]</div>";
             }, 1500);
         }
+
+        // --- Traffic Monitor Logic ---
+        function updateTraffic() {
+            const packets = ["GET /index.php", "POST /api/login", "TCP ACK 443", "UDP DNS QUERY", "SSL HANDSHAKE", "TLSv1.3 ENCRYPTED"];
+            const p = packets[Math.floor(Math.random() * packets.length)];
+            streamOut.innerHTML = `> ${p}<br>` + streamOut.innerHTML.split('<br>').slice(0, 8).join('<br>');
+            setTimeout(updateTraffic, Math.random() * 2000 + 500);
+        }
+        updateTraffic();
 
         // --- Stability Graph Logic ---
         const canvas = document.getElementById('graphCanvas');
@@ -227,21 +247,18 @@
 
         function drawGraph() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = '#00e1ff';
-            ctx.lineWidth = 2;
+            ctx.strokeStyle = '#ffcc00';
+            ctx.lineWidth = 1;
             ctx.beginPath();
-            
-            points.push(Math.random() * 40 + 30);
+            points.push(Math.random() * 60 + 20);
             points.shift();
-            
             for(let i = 0; i < points.length; i++) {
                 const x = (canvas.width / points.length) * i;
                 const y = points[i];
-                if(i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
+                if(i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
             }
             ctx.stroke();
-            document.getElementById('ping-text').innerText = `STABILITY: ${Math.floor(Math.random()*5 + 95)}% | ${Math.floor(Math.random()*10 + 12)}ms`;
+            document.getElementById('ping-text').innerText = `GATEWAY_STABILITY: ${Math.floor(Math.random()*5 + 95)}%`;
             requestAnimationFrame(drawGraph);
         }
         drawGraph();
