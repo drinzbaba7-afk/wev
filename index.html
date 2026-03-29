@@ -3,30 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DR1NZY_DRIVE | Dominance Console</title>
+    <title>DR1NZY_DRIVE | Alpha Console</title>
     <style>
         :root {
             --bg: #030303;
             --panel: #0d0d0d;
-            --accent: #ffcc00; /* Amber Gold */
-            --sub-accent: #00e1ff; /* Cyan Blue */
+            --accent: #ffcc00;
+            --sub-accent: #00e1ff;
             --terminal-green: #00ff41;
             --alert-red: #ff3c3c;
             --text-main: #d1d1d1;
             --border: #222;
-            --border-highlight: #444;
         }
 
         body {
             background-color: var(--bg);
             color: var(--text-main);
             font-family: 'Consolas', 'Courier New', monospace;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
+            margin: 0; padding: 0; overflow-x: hidden;
         }
 
-        /* Top Dominance Bar */
         .top-nav {
             background: #000;
             border-bottom: 2px solid var(--accent);
@@ -36,187 +32,104 @@
             font-size: 0.8rem;
             text-transform: uppercase;
             font-weight: bold;
-            box-shadow: 0 0 15px rgba(255, 204, 0, 0.2);
         }
 
-        .wrapper {
-            max-width: 1400px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
+        .wrapper { max-width: 1400px; margin: 30px auto; padding: 0 20px; }
 
         .brand-logo {
-            font-size: 3.5rem;
-            font-weight: 900;
-            color: var(--accent);
-            margin-bottom: 5px;
-            letter-spacing: -2px;
+            font-size: 3.5rem; font-weight: 900; color: var(--accent);
+            margin-bottom: 5px; letter-spacing: -2px;
             text-shadow: 0 0 15px rgba(255, 204, 0, 0.4);
         }
 
-        /* Tactical Command Deck */
         .console-box {
-            background: var(--panel);
-            padding: 25px;
-            border: 1px solid var(--border);
-            margin-bottom: 20px;
+            background: var(--panel); padding: 25px;
+            border: 1px solid var(--border); margin-bottom: 20px;
             position: relative;
         }
 
         .console-box::before {
-            content: "[ COMMAND ]";
-            position: absolute;
-            top: -10px;
-            left: 20px;
-            background: var(--bg);
-            color: var(--sub-accent);
-            padding: 0 10px;
-            font-size: 0.8rem;
+            content: "[ COMMAND_DECK ]"; position: absolute;
+            top: -10px; left: 20px; background: var(--bg);
+            color: var(--sub-accent); padding: 0 10px; font-size: 0.8rem;
         }
 
         .input-group { display: flex; gap: 10px; margin-bottom: 18px; }
 
         input {
-            flex-grow: 1;
-            background: #000;
-            border: 1px solid var(--border-highlight);
-            color: var(--accent);
-            padding: 18px;
-            font-size: 1.2rem;
-            outline: none;
-            transition: 0.3s;
+            flex-grow: 1; background: #000; border: 1px solid #444;
+            color: var(--accent); padding: 18px; font-size: 1.2rem; outline: none;
         }
-
-        input:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(255, 204, 0, 0.2); }
 
         .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
 
         button {
-            background: #1a1a1a;
-            color: #fff;
-            border: 1px solid #333;
-            padding: 12px 22px;
-            cursor: pointer;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            transition: 0.2s;
-            position: relative;
-            overflow: hidden;
+            background: #1a1a1a; color: #fff; border: 1px solid #333;
+            padding: 12px 22px; cursor: pointer; text-transform: uppercase;
+            font-size: 0.75rem; transition: 0.2s;
         }
 
-        button:hover { background: #222; border-color: #555; }
-        button.primary:hover { background: var(--accent); color: #000; border-color: var(--accent); }
-        button.alert:hover { background: var(--alert-red); color: #000; border-color: var(--alert-red); }
+        button:hover { background: #222; }
+        .primary:hover { background: var(--accent); color: #000; }
+        .alert:hover { background: var(--alert-red); color: #000; }
 
-        /* Multi-Display Grid */
         .display-grid {
-            display: grid;
-            grid-template-columns: 2fr 1.5fr;
-            grid-template-rows: repeat(2, auto);
-            gap: 20px;
+            display: grid; grid-template-columns: 2fr 1.5fr; gap: 20px;
         }
 
-        /* Large Terminal (Top Left) */
         #terminal {
-            grid-column: 1 / 2;
-            grid-row: 1 / 3;
-            background: #000;
-            border: 1px solid var(--border);
-            padding: 20px;
-            height: 600px;
-            overflow-y: auto;
-            color: var(--terminal-green);
-            white-space: pre-wrap;
-            font-size: 0.9rem;
-            box-shadow: inset 0 0 15px rgba(0, 255, 65, 0.15);
+            background: #000; border: 1px solid var(--border);
+            padding: 20px; height: 500px; overflow-y: auto;
+            color: var(--terminal-green); white-space: pre-wrap;
+            font-size: 0.9rem; box-shadow: inset 0 0 15px rgba(0, 255, 65, 0.1);
         }
 
-        /* Map and Scanner (Right Column) */
         #map-container, #port-scanner {
-            background: var(--panel);
-            border: 1px solid var(--border);
-            height: 290px;
-            position: relative;
-            overflow: hidden;
+            background: var(--panel); border: 1px solid var(--border);
+            height: 240px; position: relative; overflow: hidden; margin-bottom: 20px;
         }
 
-        iframe { width: 100%; height: 100%; border: none; filter: grayscale(1) invert(1) contrast(1.2); }
-        .offline-notice { color: #444; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
-
-        /* Animations */
-        .loading-shimmer { animation: blink 0.8s infinite; color: var(--accent); }
-        @keyframes blink { 50% { opacity: 0; } }
-
-        /* Traffic Graph Visualizer */
-        .traffic-graph {
-            grid-column: 1 / 3;
-            height: 100px;
-            background: var(--panel);
-            border: 1px solid var(--border);
-            position: relative;
-            overflow: hidden;
-            margin-top: 20px;
-        }
-
-        .graph-line {
-            position: absolute;
-            bottom: 0;
-            width: 5px;
-            background: var(--sub-accent);
-            animation: graphFlow 2s linear infinite;
-        }
-
-        @keyframes graphFlow {
-            0% { left: 100%; }
-            100% { left: -5%; }
-        }
-
+        iframe { width: 100%; height: 100%; border: none; filter: grayscale(1) invert(1); }
+        .status-msg { color: #444; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
     </style>
 </head>
 <body>
 
     <div class="top-nav">
-        <div>ZETA_PROTOCOL: <span style="color:var(--terminal-green)">[ DOMINANT ]</span></div>
-        <div>AUTHORIZED: <span style="color:var(--accent)">ALPHA</span></div>
+        <div>ZETA_PROTOCOL: <span style="color:var(--terminal-green)">[ ONLINE ]</span></div>
+        <div>OPERATOR: <span style="color:var(--accent)">ALPHA</span></div>
         <div id="user-meta">LINK: INITIALIZING_</div>
     </div>
 
     <div class="wrapper">
-        <div class="brand-logo">DR1NZY_DRIVE v3</div>
-        <p style="color: #555; margin-bottom: 30px; margin-top:-10px;">[ Full-Spectrum Network Dominance Interface ]</p>
-
+        <div class="brand-logo">DR1NZY_DRIVE v3.2</div>
+        
         <div class="console-box">
             <div class="input-group">
-                <input type="text" id="target" placeholder="TARGET_IDENTIFIER (IP/DOMAIN/NODE)">
+                <input type="text" id="target" placeholder="TARGET_IDENTIFIER (IP/DOMAIN)">
             </div>
             <div class="btn-row">
                 <button class="primary" onclick="executeFullScan()">Full Intel Scan</button>
                 <button onclick="scanPorts()">Port Scanner</button>
                 <button onclick="runModule('WHOIS')">Whois Data</button>
-                <button class="alert" onclick="runSimulation('brute')">Brute Sim</button>
-                <button class="alert" onclick="runSimulation('decrypt')">Quantum Decrypt</button>
-                <button onclick="clearAll()">Clear Console</button>
+                <button onclick="runSimulation('brute')">Brute Sim</button>
+                <button onclick="runSimulation('decrypt')">Quantum Decrypt</button>
+                <button class="alert" onclick="selfDestruct()">Self Destruct</button>
             </div>
         </div>
 
         <div class="display-grid">
-            <div id="terminal">> Standby for commands, Alpha...</div>
-            <div id="map-container">
-                <div class="offline-notice">[ GEOLOCATION_OFFLINE ]</div>
-            </div>
-            <div id="port-scanner">
-                <div class="offline-notice">[ PORT_SCANNER_READY ]</div>
+            <div id="terminal">> Awaiting instructions, Alpha...</div>
+            <div>
+                <div id="map-container"><div class="status-msg">[ MAP_OFFLINE ]</div></div>
+                <div id="port-scanner"><div class="status-msg">[ SCANNER_READY ]</div></div>
             </div>
         </div>
-
-        <div class="traffic-graph" id="traffic-visualizer">
-            <div style="position:absolute; top:5px; left:10px; color:#444; font-size:0.7rem;">[ NETWORK_TRAFFIC_LIVE ]</div>
-            </div>
-
     </div>
 
     <script>
-        // Set User Metadata and Traffic Graph
+        const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1481017632588173384/rhiNFMhz1p7l4SALoBvCyxEa4vJal2sEumK_gRvhOGgHo9xhkX87veJ5imMdSQ_3ah97";
+
         fetch('https://api.ipify.org?format=json')
             .then(r => r.json())
             .then(d => document.getElementById('user-meta').innerText = `NODE_LINK: ${d.ip}`);
@@ -225,119 +138,77 @@
         const mapBox = document.getElementById('map-container');
         const scannerBox = document.getElementById('port-scanner');
 
-        // Execute Full Intelligence Scan (Live API + Map)
-        async function executeFullScan() {
-            const target = document.getElementById('target').value;
-            if(!target) return addLog("> ERROR: Target Identifier Null.", 'error');
-
-            term.innerHTML = `<span class="loading-shimmer">> INITIATING DEEP RECONNAISSANCE ON ${target}...</span>`;
-            
-            try {
-                const res = await fetch(`https://ipapi.co/${target}/json/`);
-                const data = await res.json();
-                
-                // Update Terminal
-                let report = `\n> Intel Report: ${target}\n`;
-                report += `------------------------------------\n`;
-                report += `PHYSICAL LOC:  ${data.city}, ${data.country_name}\n`;
-                report += `COORDINATES:   ${data.latitude}, ${data.longitude}\n`;
-                report += `ORGANIZATION:  ${data.org}\n`;
-                report += `ASN:           ${data.asn}\n`;
-                report += `TIMEZONE:      ${data.timezone}\n`;
-                report += `IP VERSION:    ${data.version}\n`;
-                report += `------------------------------------\n`;
-                report += `> STATUS: TARGET PINPOINTED.`;
-                term.innerText += report;
-
-                // Update Map (OpenStreetMap)
-                mapBox.innerHTML = `<iframe src="https://www.openstreetmap.org/export/embed.html?bbox=${data.longitude-0.1},${data.latitude-0.1},${data.longitude+0.1},${data.latitude+0.1}&layer=mapnik&marker=${data.latitude},${data.longitude}"></iframe>`;
-            } catch (e) {
-                term.innerText += "\n> ERROR: Datastream connection timeout.";
-            }
+        async function sendToDiscord(title, content, color = 16763904) {
+            const payload = {
+                embeds: [{
+                    title: `📡 DR1NZY_INTEL: ${title}`,
+                    description: `\`\`\`${content}\`\`\``,
+                    color: color,
+                    footer: { text: "ZETA_DRIVE | AUTH: ALPHA" }
+                }]
+            };
+            await fetch(DISCORD_WEBHOOK, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
         }
 
-        // Port Scanner Simulation
+        async function executeFullScan() {
+            const target = document.getElementById('target').value;
+            if(!target) return addLog("> ERROR: Target Null.");
+            addLog(`> Initiating deep recon on ${target}...`);
+            try {
+                const res = await fetch(`https://ipapi.co/${target}/json//`);
+                const data = await res.json();
+                let report = `IP: ${data.ip}\nLOC: ${data.city}, ${data.country_name}\nISP: ${data.org}\nASN: ${data.asn}`;
+                addLog(`> SCAN COMPLETE.\n${report}`);
+                sendToDiscord("INTEL_RECON", report, 16763904);
+                mapBox.innerHTML = `<iframe src="https://www.openstreetmap.org/export/embed.html?bbox=${data.longitude-0.1},${data.latitude-0.1},${data.longitude+0.1},${data.latitude+0.1}&layer=mapnik&marker=${data.latitude},${data.longitude}"></iframe>`;
+            } catch (e) { addLog("> ERROR: Timeout."); }
+        }
+
         function scanPorts() {
             const target = document.getElementById('target').value || "127.0.0.1";
-            addLog(`> Initiating Port Scan on ${target}...`);
-            scannerBox.innerHTML = `<div style="padding:15px; color:var(--accent); font-size:0.8rem;">[ SCANNING... ]<br><br>`;
-            
-            const ports = [21, 22, 23, 25, 53, 80, 110, 443, 3306, 8080];
-            let found = 0;
-
-            ports.forEach((port, index) => {
+            addLog(`> Port scan started on ${target}...`);
+            let results = `Target: ${target}\n`;
+            const ports = [22, 80, 443, 3306];
+            ports.forEach((p, i) => {
                 setTimeout(() => {
-                    const status = Math.random() > 0.6 ? '<span style="color:var(--terminal-green)">OPEN</span>' : '<span style="color:#555">Closed</span>';
-                    scannerBox.firstChild.innerHTML += `Port ${port}: ${status}<br>`;
-                    if(status.includes('OPEN')) found++;
-                    if(index === ports.length - 1) {
-                        scannerBox.firstChild.innerHTML += `<br>[ COMPLETE: ${found} Ports Open ]`;
-                        addLog(`> Port Scan Complete: ${found} open ports detected.`);
+                    const status = Math.random() > 0.5 ? 'OPEN' : 'CLOSED';
+                    results += `PORT ${p}: ${status}\n`;
+                    if(i === ports.length - 1) {
+                        sendToDiscord("PORT_AUDIT", results, 3066993);
+                        addLog("> Port audit broadcasted.");
                     }
-                }, index * 150);
+                }, i * 200);
             });
         }
 
-        // Running Protocol/Intel Modules
-        function runModule(type) {
-            const target = document.getElementById('target').value || "localhost";
-            addLog(`> Initializing ${type} Protocol query for ${target}...`);
-            setTimeout(() => {
-                term.innerText += `\n> [LOG]: Connection successful. Querying Zeta-Database...`;
-            }, 600);
-            setTimeout(() => {
-                term.innerText += `\n> [RESULT]: Data recovered. Protocol ${type} finalized. Check primary database for full record.`;
-            }, 1200);
-        }
-
-        // Run Attack/Decrypt Simulations (No Ethics, Pure Data)
         function runSimulation(type) {
-            const target = document.getElementById('target').value || "Zeta_Node_01";
-            const color = 'color:' + (type === 'brute' ? 'var(--alert-red)' : 'var(--sub-accent)');
-            
-            addLog(`> Initializing ${type.toUpperCase()} Simulation against ${target}...`);
-            
-            let count = 0;
-            const max = type === 'brute' ? 20 : 10;
-            
-            const interval = setInterval(() => {
-                term.innerHTML += `<span style="${color}">> [${type.toUpperCase()}]: Try ${count+1}/${max}... Key: ${Math.random().toString(36).substring(2, 10)}</span>\n`;
-                term.scrollTop = term.scrollHeight; // Auto-scroll
-                count++;
-                if(count >= max) {
-                    clearInterval(interval);
-                    term.innerHTML += `<span style="color:var(--accent)">> [COMPLETE]: ${type.toUpperCase()} simulation finalized on ${target}. Result stored.</span>\n`;
-                }
-            }, 200);
+            const target = document.getElementById('target').value || "Zeta_Node";
+            addLog(`> Executing ${type} sim...`);
+            setTimeout(() => {
+                const res = `SIM: ${type.toUpperCase()}\nTARGET: ${target}\nKEY: ${Math.random().toString(36).substring(7)}`;
+                sendToDiscord("SECURITY_BYPASS", res, 16724787);
+                addLog(`> ${type} sim results sent to Discord.`);
+            }, 1000);
         }
 
-        // Utility: Add text to terminal
-        function addLog(text, type = 'normal') {
-            term.innerText += "\n" + text;
-            term.scrollTop = term.scrollHeight;
+        function runModule(type) {
+            const target = document.getElementById('target').value || "Zeta_Node";
+            sendToDiscord("WHOIS_QUERY", `Target: ${target}\nStatus: Record Found.`, 1752220);
+            addLog("> Whois data requested.");
         }
 
-        // Utility: Clear all display panels
-        function clearAll() {
-            term.innerText = "> DR1NZY_DRIVE initialized. Ready for command.";
-            mapBox.innerHTML = '<div class="offline-notice">[ GEOLOCATION_OFFLINE ]</div>';
-            scannerBox.innerHTML = '<div class="offline-notice">[ PORT_SCANNER_READY ]</div>';
+        function selfDestruct() {
+            addLog("> !!! INITIATING SELF DESTRUCT !!!");
+            sendToDiscord("TERMINAL_WIPE", "Session Destroyed by Alpha. Logs Cleared.", 0);
+            setTimeout(() => {
+                term.innerText = "> SYSTEM PURGED. CONNECTION SEVERED.";
+                mapBox.innerHTML = '<div class="status-msg">[ WIPED ]</div>';
+                scannerBox.innerHTML = '<div class="status-msg">[ WIPED ]</div>';
+                document.body.style.opacity = "0.2";
+            }, 1500);
         }
 
-        // Live Traffic Graph Simulation (Always running)
-        function startTrafficGraph() {
-            const graph = document.getElementById('traffic-visualizer');
-            for(let i = 0; i < 60; i++) {
-                const line = document.createElement('div');
-                line.className = 'graph-line';
-                line.style.height = (Math.random() * 80 + 10) + 'px';
-                line.style.left = (i * 1.6) + '%';
-                line.style.animationDelay = (Math.random() * 2) + 's'; // Varied starting times
-                graph.appendChild(line);
-            }
-        }
-        startTrafficGraph();
-
+        function addLog(text) { term.innerText += "\n" + text; term.scrollTop = term.scrollHeight; }
     </script>
 </body>
 </html>
