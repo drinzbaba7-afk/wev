@@ -3,124 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DR1NZY_DRIVE | Alpha Console</title>
+    <title>DOSSIER | F4TM1R HAKLAJ</title>
     <style>
         :root {
-            --bg: #030303; --panel: #0d0d0d; --accent: #ffcc00;
-            --sub-accent: #00e1ff; --terminal-green: #00ff41;
-            --alert-red: #ff3c3c; --text-main: #d1d1d1; --border: #222;
+            --bg: #050505;
+            --panel: #0f0f0f;
+            --accent: #ffcc00;
+            --discord-purple: #5865F2;
+            --text: #e0e0e0;
+            --border: #222;
         }
-        body { background-color: var(--bg); color: var(--text-main); font-family: 'Consolas', monospace; margin: 0; padding: 0; overflow-x: hidden; }
-        .top-nav { background: #000; border-bottom: 2px solid var(--accent); padding: 12px 25px; display: flex; justify-content: space-between; font-size: 0.8rem; text-transform: uppercase; font-weight: bold; }
-        .wrapper { max-width: 1400px; margin: 30px auto; padding: 0 20px; }
-        .brand-logo { font-size: 3.5rem; font-weight: 900; color: var(--accent); margin-bottom: 5px; letter-spacing: -2px; text-shadow: 0 0 15px rgba(255, 204, 0, 0.4); }
-        .console-box { background: var(--panel); padding: 25px; border: 1px solid var(--border); margin-bottom: 20px; position: relative; }
-        .console-box::before { content: "[ MASTER_CONTROL ]"; position: absolute; top: -10px; left: 20px; background: var(--bg); color: var(--sub-accent); padding: 0 10px; font-size: 0.8rem; }
-        .input-group { display: flex; gap: 10px; margin-bottom: 18px; }
-        input { flex-grow: 1; background: #000; border: 1px solid #444; color: var(--accent); padding: 18px; font-size: 1.2rem; outline: none; }
-        .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
-        button { background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 12px 22px; cursor: pointer; text-transform: uppercase; font-size: 0.75rem; transition: 0.2s; }
-        button:hover { background: #222; }
-        .primary:hover { background: var(--accent); color: #000; }
-        .alert:hover { background: var(--alert-red); color: #000; }
-        .display-grid { display: grid; grid-template-columns: 2fr 1.5fr; gap: 20px; }
-        #terminal { background: #000; border: 1px solid var(--border); padding: 20px; height: 600px; overflow-y: auto; color: var(--terminal-green); white-space: pre-wrap; font-size: 0.9rem; box-shadow: inset 0 0 15px rgba(0, 255, 65, 0.1); }
-        .side-panel { background: var(--panel); border: 1px solid var(--border); height: 190px; position: relative; overflow: hidden; margin-bottom: 15px; }
-        iframe { width: 100%; height: 100%; border: none; filter: grayscale(1) invert(1); }
-        .status-msg { color: #444; position: absolute; top: 10px; left: 10px; font-size: 0.7rem; text-transform: uppercase; z-index: 2;}
-        canvas { width: 100%; height: 100%; }
-        .data-stream { padding: 35px 10px 10px 10px; font-size: 0.7rem; color: var(--sub-accent); line-height: 1.3; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .dossier-card {
+            background: var(--panel);
+            width: 450px;
+            border: 1px solid var(--border);
+            border-top: 4px solid var(--discord-purple);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-banner {
+            height: 100px;
+            background: linear-gradient(to bottom, var(--discord-purple), transparent);
+        }
+
+        .profile-section {
+            padding: 0 20px 20px 20px;
+            text-align: center;
+            margin-top: -50px;
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 5px solid var(--panel);
+            background: #222;
+            margin-bottom: 10px;
+        }
+
+        .badge-row {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        h1 { margin: 0; font-size: 1.5rem; letter-spacing: 1px; }
+        .handle { color: #888; font-size: 0.9rem; margin-bottom: 20px; }
+
+        .intel-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            background: rgba(0,0,0,0.2);
+        }
+
+        .intel-item {
+            font-size: 0.75rem;
+            color: #aaa;
+            text-align: left;
+        }
+
+        .intel-label {
+            display: block;
+            color: var(--accent);
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .link-button {
+            display: block;
+            margin: 20px;
+            padding: 12px;
+            background: #1a1a1a;
+            color: #fff;
+            text-decoration: none;
+            text-align: center;
+            border: 1px solid #333;
+            font-size: 0.8rem;
+            transition: 0.2s;
+        }
+
+        .link-button:hover {
+            background: var(--discord-purple);
+            border-color: var(--discord-purple);
+        }
+
+        .footer {
+            padding: 10px;
+            font-size: 0.6rem;
+            color: #444;
+            text-align: center;
+            letter-spacing: 2px;
+        }
     </style>
 </head>
 <body>
-    <div class="top-nav">
-        <div>ZETA_STATUS: <span style="color:var(--terminal-green)">[ LEAN_DECK ]</span></div>
-        <div>OPERATOR: <span style="color:var(--accent)">ALPHA</span></div>
-        <div id="user-meta">LINK: 93.103.182.83</div>
-    </div>
-    <div class="wrapper">
-        <div class="brand-logo">DR1NZY_DRIVE v3.7</div>
-        <div class="console-box">
-            <div class="input-group"><input type="text" id="target" placeholder="TARGET_IDENTIFIER (IP/DOMAIN)"></div>
-            <div class="btn-row">
-                <button class="primary" onclick="executeFullScan()">Full Intel Scan</button>
-                <button onclick="subnetScan()">Subnet Scan</button>
-                <button onclick="clearTerminal()">Clear</button>
-                <button class="alert" onclick="selfDestruct()">Self Destruct</button>
-            </div>
-        </div>
-        <div class="display-grid">
-            <div id="terminal">> System pruned. Redundant modules removed. Awaiting command, Alpha.</div>
-            <div>
-                <div class="side-panel" id="stability-graph"><div class="status-msg" id="ping-text">STABILITY: 100%</div><canvas id="graphCanvas"></canvas></div>
-                <div class="side-panel" id="map-container"><div class="status-msg">GEOLOCATION_MAP</div><div style="margin-top:40%; text-align:center; color:#333;">[ OFFLINE ]</div></div>
-                <div class="side-panel" id="traffic-monitor"><div class="status-msg">LIVE_NODE_TRAFFIC</div><div class="data-stream" id="stream-output">Listening...</div></div>
-            </div>
-        </div>
-    </div>
-    <script>
-        // Use the IP from your provided diagnostics for the UI
-        document.getElementById('user-meta').innerText = `NODE_LINK: 93.103.182.83`;
+
+    <div class="dossier-card">
+        <div class="header-banner"></div>
         
-        const term = document.getElementById('terminal');
-        const mapBox = document.getElementById('map-container');
-        const streamOut = document.getElementById('stream-output');
+        <div class="profile-section">
+            <img src="https://i.imgur.com/8NBa8pW.png" alt="Target Avatar" class="avatar">
+            <h1>[PLAYER] F4TM1R HAKLAJ</h1>
+            <div class="handle">gjujts.me.do4um3nta</div>
 
-        function addLog(text, color = 'var(--terminal-green)') {
-            const span = document.createElement('span');
-            span.style.color = color;
-            span.innerHTML = `\n${text}`;
-            term.appendChild(span);
-            term.scrollTop = term.scrollHeight;
-        }
+            <div class="badge-row">
+                <div class="badge">HELPER 🛠️</div>
+                <div class="badge">LOJTAR 🎧</div>
+                <div class="badge">ZETA_VERIFIED</div>
+            </div>
+        </div>
 
-        async function executeFullScan() {
-            const target = document.getElementById('target').value;
-            if(!target) return addLog("> ERROR: Target Null.", 'var(--alert-red)');
-            addLog(`> INITIATING RECON ON ${target}...`, 'var(--accent)');
-            try {
-                const res = await fetch(`https://ipapi.co/${target}/json/`);
-                const data = await res.json();
-                addLog(`\n> Intel: ${target}\nLOC: ${data.city}, ${data.country_name}\nISP: ${data.org}\nASN: ${data.asn}\n> STATUS: COMPLETE.`);
-                mapBox.innerHTML = `<div class="status-msg">GEOLOCATION_MAP</div><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=${data.longitude-0.1},${data.latitude-0.1},${data.longitude+0.1},${data.latitude+0.1}&layer=mapnik&marker=${data.latitude},${data.longitude}"></iframe>`;
-            } catch (e) { addLog("> ERROR: Timeout.", 'var(--alert-red)'); }
-        }
+        <div class="intel-grid">
+            <div class="intel-item">
+                <span class="intel-label">STATUS</span>
+                CONNECTED (VR_VRHNIKA)
+            </div>
+            <div class="intel-item">
+                <span class="intel-label">MUTUALS</span>
+                26 FRIENDS | 8 SERVERS
+            </div>
+            <div class="intel-item">
+                <span class="intel-label">ASSETS</span>
+                GTA V COLLECTION
+            </div>
+            <div class="intel-item">
+                <span class="intel-label">ORIGIN</span>
+                SLOVENIA (LJUBLJANA)
+            </div>
+        </div>
 
-        function subnetScan() {
-            const target = document.getElementById('target').value || "192.168.1.1";
-            addLog(`> Scanning subnet for ${target}...`, 'var(--sub-accent)');
-            for(let i=1; i<=3; i++) {
-                setTimeout(() => addLog(`> Node ${i}: ${target.split('.').slice(0,3).join('.')}.${i+10} [ACTIVE]`), i*300);
-            }
-        }
+        <a href="https://guns.lol/fatmirhaklaj" target="_blank" class="link-button">VIEW EXTERNAL ARSENAL</a>
 
-        function clearTerminal() { term.innerHTML = "> Console Purged."; mapBox.innerHTML = '<div class="status-msg">GEOLOCATION_MAP</div><div style="margin-top:40%; text-align:center; color:#333;">[ OFFLINE ]</div>'; }
+        <div class="footer">
+            DR1NZY_DRIVE // ZETA_PROTOCOL // NO_TRACE_LEFT
+        </div>
+    </div>
 
-        function selfDestruct() {
-            addLog("> !!! SYSTEM WIPE !!!", 'var(--alert-red)');
-            setTimeout(() => { document.body.innerHTML = "<div style='color:red; font-family:monospace; text-align:center; margin-top:20%; font-size:2rem;'>[ DISCONNECTED ]</div>"; }, 800);
-        }
-
-        function updateTraffic() {
-            const p = ["ACK: 93.103.182.83", "TCP: Handshake", "TLS: Active", "RT: 14ms"][Math.floor(Math.random()*4)];
-            streamOut.innerHTML = `> ${p}<br>` + streamOut.innerHTML.split('<br>').slice(0, 6).join('<br>');
-            setTimeout(updateTraffic, 2000);
-        }
-        updateTraffic();
-
-        const canvas = document.getElementById('graphCanvas'); const ctx = canvas.getContext('2d');
-        let points = Array(50).fill(50);
-        function drawGraph() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.strokeStyle = '#ffcc00'; ctx.lineWidth = 1; ctx.beginPath();
-            points.push(Math.random() * 40 + 20); points.shift();
-            for(let i = 0; i < points.length; i++) {
-                const x = (canvas.width / points.length) * i; const y = points[i];
-                if(i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-            }
-            ctx.stroke(); document.getElementById('ping-text').innerText = `STABILITY: ${Math.floor(Math.random()*3 + 97)}%`;
-            requestAnimationFrame(drawGraph);
-        }
-        drawGraph();
-    </script>
 </body>
 </html>
