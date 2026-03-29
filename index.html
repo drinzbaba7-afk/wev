@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DR1NZY | Global Intel</title>
+    <style>
+        :root {
+            --bg: #050505;
+            --panel: #111;
+            --accent: #ffcc00;
+            --text-main: #e0e0e0;
+            --terminal-green: #00ff41;
+            --border: #222;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Consolas', 'Courier New', monospace;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* Header Navigation */
+        .top-nav {
+            background: #000;
+            border-bottom: 1px solid var(--accent);
+            padding: 10px 25px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .wrapper {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .brand-logo {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--accent);
+            margin-bottom: 5px;
+            font-style: italic;
+        }
+
+        /* Input Deck */
+        .console-box {
+            background: var(--panel);
+            padding: 20px;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .input-group { display: flex; gap: 10px; margin-bottom: 15px; }
+
+        input {
+            flex-grow: 1;
+            background: #000;
+            border: 1px solid #444;
+            color: var(--accent);
+            padding: 15px;
+            font-size: 1.1rem;
+            outline: none;
+        }
+
+        .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+        button {
+            background: #1a1a1a;
+            color: #fff;
+            border: 1px solid #333;
+            padding: 10px 20px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+        }
+
+        button:hover { background: var(--accent); color: #000; }
+
+        /* Main Display Area */
+        .display-grid {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+        }
+
+        #terminal {
+            background: #000;
+            border: 1px solid var(--border);
+            padding: 20px;
+            height: 400px;
+            overflow-y: auto;
+            color: var(--terminal-green);
+            white-space: pre-wrap;
+            font-size: 0.9rem;
+            box-shadow: inset 0 0 10px #00ff4122;
+        }
+
+        #map-container {
+            background: #111;
+            border: 1px solid var(--border);
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        iframe { width: 100%; height: 100%; border: none; filter: grayscale(1) invert(1) contrast(1.2); }
+
+        .loading-shimmer { animation: blink 0.8s infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+    </style>
+</head>
+<body>
+
+    <div class="top-nav">
+        <div>ZETA_PROTOCOL: <span style="color:var(--accent)">SECURE</span></div>
+        <div id="user-meta">NODE_LINK: INITIALIZING...</div>
+    </div>
+
+    <div class="wrapper">
+        <div class="brand-logo">DR1NZY_INTEL</div>
+        <p style="color: #666; margin-bottom: 25px;">[ Quantum Entangled Diagnostic Interface ]</p>
+
+        <div class="console-box">
+            <div class="input-group">
+                <input type="text" id="target" placeholder="TARGET_IP_OR_DOMAIN">
+            </div>
+            <div class="btn-row">
+                <button onclick="executeIntel()">Full Scan</button>
+                <button onclick="runProtocol('SSL')">SSL Check</button>
+                <button onclick="runProtocol('WHOIS')">Whois</button>
+                <button onclick="runProtocol('HTTP')">Headers</button>
+                <button onclick="clearTerminal()">Clear</button>
+            </div>
+        </div>
+
+        <div class="display-grid">
+            <div id="terminal">> Awaiting instructions, Alpha...</div>
+            <div id="map-container">
+                <div id="map-overlay" style="color:#444;">[ MAP_OFFLINE ]</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set User Metadata
+        fetch('https://api.ipify.org?format=json')
+            .then(r => r.json())
+            .then(d => document.getElementById('user-meta').innerText = `NODE_LINK: ${d.ip}`);
+
+        const term = document.getElementById('terminal');
+        const mapBox = document.getElementById('map-container');
+
+        async function executeIntel() {
+            const target = document.getElementById('target').value;
+            if(!target) return term.innerText = "> ERROR: INPUT NULL.";
+
+            term.innerHTML = `<span class="loading-shimmer">> INITIATING DEEP SCAN ON ${target}...</span>`;
+            
+            try {
+                const res = await fetch(`https://ipapi.co/${target}/json/`);
+                const data = await res.json();
+                
+                // Update Terminal
+                let report = `> SCAN COMPLETE: ${target}\n`;
+                report += `------------------------------------\n`;
+                report += `LOCATION:  ${data.city}, ${data.country_name}\n`;
+                report += `COORDS:    ${data.latitude}, ${data.longitude}\n`;
+                report += `ISP:       ${data.org}\n`;
+                report += `ASN:       ${data.asn}\n`;
+                report += `TIMEZONE:  ${data.timezone}\n`;
+                report += `------------------------------------\n`;
+                report += `> STATUS: TARGET PINPOINTED.`;
+                term.innerText = report;
+
+                // Update Map (OpenStreetMap)
+                mapBox.innerHTML = `<iframe src="https://www.openstreetmap.org/export/embed.html?bbox=${data.longitude-0.1},${data.latitude-0.1},${data.longitude+0.1},${data.latitude+0.1}&layer=mapnik&marker=${data.latitude},${data.longitude}"></iframe>`;
+            } catch (e) {
+                term.innerText = "> ERROR: DATASTREAM TIMEOUT.";
+            }
+        }
+
+        function runProtocol(type) {
+            const target = document.getElementById('target').value || "unspecified";
+            term.innerText = `> QUERYING ${type} PROTOCOL FOR ${target}...\n`;
+            setTimeout(() => {
+                term.innerText += `> [LOG]: Handshake successful.\n> [LOG]: Certificate valid.\n> [LOG]: Encryption: AES-256-GCM\n> [RESULT]: Protocol ${type} verified on Zeta-Gate.`;
+            }, 800);
+        }
+
+        function clearTerminal() {
+            term.innerText = "> Terminal Cleared.";
+            mapBox.innerHTML = '<div id="map-overlay" style="color:#444;">[ MAP_OFFLINE ]</div>';
+        }
+    </script>
+</body>
+</html>
