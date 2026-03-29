@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zeta | Network Diagnostics</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --accent-color: #ffb400;
+            --text-color: #e0e0e0;
+            --border-color: #333;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            padding: 10px 20px;
+            background: #000;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin-top: 30px;
+        }
+
+        .search-bar {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            display: flex;
+            gap: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        input {
+            flex-grow: 1;
+            background: #000;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            padding: 10px;
+            font-size: 1.1rem;
+        }
+
+        button {
+            background: var(--accent-color);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            filter: brightness(1.2);
+        }
+
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .card h3 { color: var(--accent-color); margin-top: 0; }
+
+        #results-area {
+            margin-top: 20px;
+            padding: 20px;
+            background: #000;
+            border: 1px dashed var(--accent-color);
+            min-height: 100px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>SYSTEM: ZETA-OS 🛰️</div>
+        <div id="top-ip">Locating Host...</div>
+    </header>
+
+    <div class="container">
+        <div class="search-bar">
+            <input type="text" id="target" placeholder="Hostname or IP address...">
+            <button onclick="runTool('info')">INFO</button>
+            <button onclick="runTool('ping')">PING</button>
+            <button onclick="runTool('dns')">DNS</button>
+        </div>
+
+        <div id="results-area">Results will appear here, Alpha. ⚡</div>
+
+        <div class="tool-grid">
+            <div class="card">
+                <h3>IP Info</h3>
+                <p>Geolocation, ISP, and organization data for any Zeta/Old-Realm node.</p>
+            </div>
+            <div class="card">
+                <h3>Ping Test</h3>
+                <p>Measure latency across the quantum network nodes.</p>
+            </div>
+            <div class="card">
+                <h3>DNS Lookup</h3>
+                <p>Retrieve A, AAAA, and MX records for target domains.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fetch User's IP for header
+        fetch('https://api.ipify.org?format=json')
+            .then(r => r.json())
+            .then(d => document.getElementById('top-ip').innerText = "IP: " + d.ip);
+
+        async function runTool(type) {
+            const target = document.getElementById('target').value || '8.8.8.8';
+            const display = document.getElementById('results-area');
+            display.innerText = `Executing ${type.toUpperCase()} on ${target}...`;
+
+            try {
+                if (type === 'info') {
+                    const res = await fetch(`https://ipapi.co/${target}/json/`);
+                    const data = await res.json();
+                    display.innerText = JSON.stringify(data, null, 2);
+                } else {
+                    // Note: True Ping/DNS requires server-side logic. 
+                    // This simulates the response for the UI structure.
+                    display.innerText = `[SIMULATION] Querying ${type} for ${target}...\nResult: Reachable via Zeta-Gate 01.`;
+                }
+            } catch (e) {
+                display.innerText = "Error accessing data stream.";
+            }
+        }
+    </script>
+</body>
+</html>
