@@ -49,7 +49,7 @@
         }
 
         .console-box::before {
-            content: "[ TACTICAL_DECK ]"; position: absolute;
+            content: "[ INFRASTRUCTURE_DECK ]"; position: absolute;
             top: -10px; left: 20px; background: var(--bg);
             color: var(--sub-accent); padding: 0 10px; font-size: 0.8rem;
         }
@@ -79,56 +79,56 @@
 
         #terminal {
             background: #000; border: 1px solid var(--border);
-            padding: 20px; height: 550px; overflow-y: auto;
+            padding: 20px; height: 600px; overflow-y: auto;
             color: var(--terminal-green); white-space: pre-wrap;
             font-size: 0.9rem; box-shadow: inset 0 0 15px rgba(0, 255, 65, 0.1);
         }
 
         .side-panel {
             background: var(--panel); border: 1px solid var(--border);
-            height: 175px; position: relative; overflow: hidden; margin-bottom: 10px;
+            height: 190px; position: relative; overflow: hidden; margin-bottom: 15px;
         }
 
         iframe { width: 100%; height: 100%; border: none; filter: grayscale(1) invert(1); }
-        .status-msg { color: #444; position: absolute; top: 10px; left: 10px; font-size: 0.7rem; text-transform: uppercase;}
+        .status-msg { color: #444; position: absolute; top: 10px; left: 10px; font-size: 0.7rem; text-transform: uppercase; z-index: 2;}
         
         canvas { width: 100%; height: 100%; }
 
         .data-stream {
-            padding: 30px 10px 10px 10px;
+            padding: 35px 10px 10px 10px;
             font-size: 0.7rem;
             color: var(--sub-accent);
-            line-height: 1.2;
+            line-height: 1.3;
         }
     </style>
 </head>
 <body>
 
     <div class="top-nav">
-        <div>ZETA_STATUS: <span style="color:var(--terminal-green)">[ SYNCHRONIZED ]</span></div>
+        <div>ZETA_STATUS: <span style="color:var(--terminal-green)">[ INFRA_MAPPED ]</span></div>
         <div>OPERATOR: <span style="color:var(--accent)">ALPHA</span></div>
         <div id="user-meta">LINK: INITIALIZING_</div>
     </div>
 
     <div class="wrapper">
-        <div class="brand-logo">DR1NZY_DRIVE v3.4</div>
+        <div class="brand-logo">DR1NZY_DRIVE v3.5</div>
         
         <div class="console-box">
             <div class="input-group">
-                <input type="text" id="target" placeholder="TARGET_IDENTIFIER (IP/DOMAIN)">
+                <input type="text" id="target" placeholder="TARGET_IDENTIFIER (IP/DOMAIN/ORG)">
             </div>
             <div class="btn-row">
                 <button class="primary" onclick="executeFullScan()">Full Intel Scan</button>
+                <button onclick="orgSearch()">Org Search</button>
+                <button onclick="whoisHistory()">Whois History</button>
                 <button onclick="scanPorts()">Port Scanner</button>
-                <button onclick="dnsRecon()">DNS Recon</button>
-                <button onclick="httpHeaders()">HTTP Headers</button>
                 <button onclick="clearTerminal()">Clear</button>
                 <button class="alert" onclick="selfDestruct()">Self Destruct</button>
             </div>
         </div>
 
         <div class="display-grid">
-            <div id="terminal">> Awaiting instructions, Alpha...</div>
+            <div id="terminal">> Infrastructure link established. Standby, Alpha...</div>
             <div>
                 <div class="side-panel" id="stability-graph">
                     <div class="status-msg" id="ping-text">GATEWAY_STABILITY: 100%</div>
@@ -139,8 +139,8 @@
                     <div style="margin-top:40%; text-align:center; color:#333;">[ OFFLINE ]</div>
                 </div>
                 <div class="side-panel" id="traffic-monitor">
-                    <div class="status-msg">LIVE_TRAFFIC_MONITOR</div>
-                    <div class="data-stream" id="stream-output">Initializing packet capture...</div>
+                    <div class="status-msg">LIVE_NODE_TRAFFIC</div>
+                    <div class="data-stream" id="stream-output">Syncing with Zeta-Net...</div>
                 </div>
             </div>
         </div>
@@ -165,93 +165,76 @@
 
         async function executeFullScan() {
             const target = document.getElementById('target').value;
-            if(!target) return addLog("> ERROR: Target Identifier Null.", 'var(--alert-red)');
-            
-            addLog(`> INITIATING DEEP RECONNAISSANCE ON ${target}...`, 'var(--accent)');
-            
+            if(!target) return addLog("> ERROR: Target Null.", 'var(--alert-red)');
+            addLog(`> INITIATING DEEP RECON ON ${target}...`, 'var(--accent)');
             try {
                 const res = await fetch(`https://ipapi.co/${target}/json/`);
                 const data = await res.json();
-                
-                let report = `\n> Intel Recovered for ${target}:\n`;
-                report += `------------------------------------\n`;
-                report += `CITY/COUNTRY: ${data.city || 'N/A'}, ${data.country_name || 'N/A'}\n`;
-                report += `ISP/ORG:      ${data.org || 'N/A'}\n`;
-                report += `COORDS:       ${data.latitude}, ${data.longitude}\n`;
-                report += `ASN/VER:      ${data.asn || 'N/A'} / ${data.version || 'N/A'}\n`;
-                report += `------------------------------------`;
-                
+                let report = `\n> Intel: ${target}\n------------------------------------\nLOC: ${data.city}, ${data.country_name}\nISP: ${data.org}\nASN: ${data.asn}\n------------------------------------`;
                 addLog(report);
                 mapBox.innerHTML = `<div class="status-msg">GEOLOCATION_MAP</div><iframe src="https://www.openstreetmap.org/export/embed.html?bbox=${data.longitude-0.1},${data.latitude-0.1},${data.longitude+0.1},${data.latitude+0.1}&layer=mapnik&marker=${data.latitude},${data.longitude}"></iframe>`;
-            } catch (e) {
-                addLog("> ERROR: Connection to datastream severed.", 'var(--alert-red)');
-            }
+            } catch (e) { addLog("> ERROR: Datastream Severed.", 'var(--alert-red)'); }
+        }
+
+        function orgSearch() {
+            const target = document.getElementById('target').value || "Unknown_Org";
+            addLog(`> Querying ISP infrastructure for: ${target}...`, 'var(--sub-accent)');
+            setTimeout(() => {
+                addLog(`> [CIDR] 192.168.0.0/24 detected.`);
+                addLog(`> [NODES] 254 potential endpoints mapped.`);
+                addLog(`> [GATEWAY] zeta-gw-prod-01.local`);
+                addLog(`> Organization mapping complete.`);
+            }, 900);
+        }
+
+        function whoisHistory() {
+            const target = document.getElementById('target').value || "Zeta_Target";
+            addLog(`> Retrieving WHOIS ownership history for ${target}...`, 'var(--sub-accent)');
+            setTimeout(() => {
+                addLog(`> [2024-03-20]: Registration updated (Alpha-Corp).`);
+                addLog(`> [2022-11-15]: Nameserver shift to ZETA-DNS-01.`);
+                addLog(`> [2019-06-01]: Initial record created.`);
+                addLog(`> Historical audit finalized.`);
+            }, 700);
         }
 
         function scanPorts() {
             const target = document.getElementById('target').value || "127.0.0.1";
-            addLog(`> Starting Port Audit on ${target}...`, 'var(--sub-accent)');
-            const ports = [21, 22, 53, 80, 443, 3306];
-            ports.forEach((p, i) => {
+            addLog(`> Port Audit: ${target}...`, 'var(--sub-accent)');
+            [80, 443, 22].forEach((p, i) => {
                 setTimeout(() => {
-                    const open = Math.random() > 0.6;
+                    const open = Math.random() > 0.5;
                     addLog(`> Port ${p}: ${open ? 'OPEN' : 'CLOSED'}`, open ? 'var(--terminal-green)' : 'var(--border)');
-                }, i * 150);
+                }, i * 200);
             });
         }
 
-        function dnsRecon() {
-            const target = document.getElementById('target').value || "Zeta_Node";
-            addLog(`> Querying DNS records for ${target}...`, 'var(--sub-accent)');
-            setTimeout(() => {
-                addLog(`> [A] ${target} -> 192.168.${Math.floor(Math.random()*254)}.${Math.floor(Math.random()*254)}`);
-                addLog(`> [MX] mail.${target} -> priority 10`);
-                addLog(`> [TXT] "v=spf1 include:_spf.google.com ~all"`);
-                addLog(`> DNS Reconnaissance complete.`);
-            }, 800);
-        }
-
-        function httpHeaders() {
-            const target = document.getElementById('target').value || "Zeta_Node";
-            addLog(`> Fetching HTTP Headers for ${target}...`, 'var(--sub-accent)');
-            setTimeout(() => {
-                addLog(`> HTTP/1.1 200 OK\n> Server: nginx/Zeta-v4\n> Content-Type: text/html\n> X-Frame-Options: SAMEORIGIN\n> Connection: keep-alive`);
-            }, 600);
-        }
-
         function clearTerminal() {
-            term.innerHTML = "> Console Purged. Ready for command, Alpha.";
+            term.innerHTML = "> Console Purged. Ready, Alpha.";
             mapBox.innerHTML = '<div class="status-msg">GEOLOCATION_MAP</div><div style="margin-top:40%; text-align:center; color:#333;">[ OFFLINE ]</div>';
         }
 
         function selfDestruct() {
-            addLog("> !!! INITIATING SYSTEM WIPE !!!", 'var(--alert-red)');
-            setTimeout(() => {
-                document.body.innerHTML = "<div style='color:red; font-family:monospace; text-align:center; margin-top:20%; font-size:2rem;'>[ SYSTEM TERMINATED ]</div>";
-            }, 1500);
+            addLog("> !!! SYSTEM WIPE !!!", 'var(--alert-red)');
+            setTimeout(() => { document.body.innerHTML = "<div style='color:red; font-family:monospace; text-align:center; margin-top:20%; font-size:2rem;'>[ DISCONNECTED ]</div>"; }, 1000);
         }
 
-        // --- Traffic Monitor Logic ---
         function updateTraffic() {
-            const packets = ["GET /index.php", "POST /api/login", "TCP ACK 443", "UDP DNS QUERY", "SSL HANDSHAKE", "TLSv1.3 ENCRYPTED"];
-            const p = packets[Math.floor(Math.random() * packets.length)];
-            streamOut.innerHTML = `> ${p}<br>` + streamOut.innerHTML.split('<br>').slice(0, 8).join('<br>');
-            setTimeout(updateTraffic, Math.random() * 2000 + 500);
+            const p = ["HANDSHAKE: Node-A -> Node-Z", "PACKET: Encrypted (AES-256)", "QUERY: DB_RECON_SYNC", "STATUS: 200 OK (Zeta-Gateway)"][Math.floor(Math.random()*4)];
+            streamOut.innerHTML = `> ${p}<br>` + streamOut.innerHTML.split('<br>').slice(0, 6).join('<br>');
+            setTimeout(updateTraffic, 1500);
         }
         updateTraffic();
 
-        // --- Stability Graph Logic ---
         const canvas = document.getElementById('graphCanvas');
         const ctx = canvas.getContext('2d');
         let points = Array(50).fill(50);
-
         function drawGraph() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.strokeStyle = '#ffcc00';
             ctx.lineWidth = 1;
             ctx.beginPath();
-            points.push(Math.random() * 60 + 20);
-            points.shift();
+            points.push(Math.random() * 40 + 20); points.shift();
             for(let i = 0; i < points.length; i++) {
                 const x = (canvas.width / points.length) * i;
                 const y = points[i];
