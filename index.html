@@ -3,167 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DOSSIER | F4TM1R HAKLAJ</title>
+    <title>ARSENAL | {fatmirhaklaj}</title>
     <style>
         :root {
-            --bg: #050505;
-            --panel: #0f0f0f;
-            --accent: #ffcc00;
-            --discord-purple: #5865F2;
-            --text: #e0e0e0;
+            --bg: #000;
+            --overlay: rgba(10, 10, 10, 0.95);
+            --card: #151515;
+            --accent: #ff0000; /* Alert Red */
+            --text-main: #fff;
+            --text-dim: #777;
             --border: #222;
         }
 
         body {
             background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-main);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             display: flex;
             justify-content: center;
-        }
-
-        .dossier-card {
-            background: var(--panel);
-            width: 450px;
-            border: 1px solid var(--border);
-            border-top: 4px solid var(--discord-purple);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            position: relative;
+            align-items: center;
+            height: 100vh;
             overflow: hidden;
+            background-image: url('https://i.imgur.com/8NBa8pW.png'); /* Background trace */
+            background-size: cover;
+            background-position: center;
         }
 
-        .header-banner {
-            height: 100px;
-            background: linear-gradient(to bottom, var(--discord-purple), transparent);
-        }
-
-        .profile-section {
-            padding: 0 20px 20px 20px;
-            text-align: center;
-            margin-top: -50px;
-        }
-
-        .avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: 5px solid var(--panel);
-            background: #222;
-            margin-bottom: 10px;
-        }
-
-        .badge-row {
+        .master-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--overlay);
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 15px;
+            align-items: center;
         }
 
-        .badge {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 4px 10px;
+        .volume-icon {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 1.2rem;
+            color: #444;
+            cursor: pointer;
+        }
+
+        .view-counter {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-size: 0.8rem;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .profile-card {
+            background: var(--card);
+            border: 1px solid var(--border);
             border-radius: 12px;
-            font-size: 0.7rem;
+            width: 400px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(0,0,0,1);
+        }
+
+        .target-id {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 5px;
+        }
+
+        .target-id::before { content: '{'; color: var(--text-dim); }
+        .target-id::after { content: '}'; color: var(--text-dim); }
+
+        .target-bio {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin-bottom: 25px;
+            letter-spacing: 0.5px;
+        }
+
+        .location-tag {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--text-main);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 30px;
+        }
+
+        .status-block {
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
+            font-size: 0.85rem;
             color: var(--accent);
             text-transform: uppercase;
             font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 30px;
         }
 
-        h1 { margin: 0; font-size: 1.5rem; letter-spacing: 1px; }
-        .handle { color: #888; font-size: 0.9rem; margin-bottom: 20px; }
+        .status-block span { color: var(--text-main); text-transform: none; }
 
-        .intel-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            padding: 20px;
-            border-top: 1px solid var(--border);
-            background: rgba(0,0,0,0.2);
-        }
-
-        .intel-item {
-            font-size: 0.75rem;
-            color: #aaa;
-            text-align: left;
-        }
-
-        .intel-label {
-            display: block;
-            color: var(--accent);
-            font-weight: bold;
-            margin-bottom: 2px;
-        }
-
-        .link-button {
-            display: block;
-            margin: 20px;
-            padding: 12px;
-            background: #1a1a1a;
+        .discord-link {
+            font-size: 1.5rem;
             color: #fff;
-            text-decoration: none;
-            text-align: center;
-            border: 1px solid #333;
-            font-size: 0.8rem;
+            opacity: 0.4;
             transition: 0.2s;
+            text-decoration: none;
         }
 
-        .link-button:hover {
-            background: var(--discord-purple);
-            border-color: var(--discord-purple);
-        }
-
-        .footer {
-            padding: 10px;
-            font-size: 0.6rem;
-            color: #444;
-            text-align: center;
-            letter-spacing: 2px;
-        }
+        .discord-link:hover { opacity: 1; }
     </style>
 </head>
 <body>
 
-    <div class="dossier-card">
-        <div class="header-banner"></div>
+    <div class="master-overlay">
         
-        <div class="profile-section">
-            <img src="https://i.imgur.com/8NBa8pW.png" alt="Target Avatar" class="avatar">
-            <h1>[PLAYER] F4TM1R HAKLAJ</h1>
-            <div class="handle">gjujts.me.do4um3nta</div>
+        <div class="volume-icon">🔊</div>
 
-            <div class="badge-row">
-                <div class="badge">HELPER 🛠️</div>
-                <div class="badge">LOJTAR 🎧</div>
-                <div class="badge">ZETA_VERIFIED</div>
+        <div class="profile-card">
+            <div class="target-id">fatmirhaklaj</div>
+            <div class="target-bio">haters suck my dick</div>
+
+            <div class="location-tag">📍 Kosovo</div>
+
+            <div class="status-block">
+                ⚠️ USER_NOT_FOUND_ON_ZETA<br>
+                <span>SYNC: Initializing trace for target bio.</span>
             </div>
+
+            <a href="https://guns.lol/fatmirhaklaj" target="_blank" class="discord-link">🛰️</a>
         </div>
 
-        <div class="intel-grid">
-            <div class="intel-item">
-                <span class="intel-label">STATUS</span>
-                CONNECTED (VR_VRHNIKA)
-            </div>
-            <div class="intel-item">
-                <span class="intel-label">MUTUALS</span>
-                26 FRIENDS | 8 SERVERS
-            </div>
-            <div class="intel-item">
-                <span class="intel-label">ASSETS</span>
-                GTA V COLLECTION
-            </div>
-            <div class="intel-item">
-                <span class="intel-label">ORIGIN</span>
-                SLOVENIA (LJUBLJANA)
-            </div>
-        </div>
-
-        <a href="https://guns.lol/fatmirhaklaj" target="_blank" class="link-button">VIEW EXTERNAL ARSENAL</a>
-
-        <div class="footer">
-            DR1NZY_DRIVE // ZETA_PROTOCOL // NO_TRACE_LEFT
-        </div>
+        <div class="view-counter">👁️ 60</div>
     </div>
 
 </body>
